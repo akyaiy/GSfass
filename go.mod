@@ -1,3 +1,3 @@
-module github.com/akyaiy/GSfass/gs
+module github.com/akyaiy/GSfass
 
 go 1.24.6
