@@ -2,6 +2,7 @@
 
 NAME = gsfaas
 ENTRY = ./cmd/$(NAME)/main.go
+BIN_DIR = bin
 BINARY = ../${BIN_DIR}/$(NAME)
 CHECK_LINTER = command -v golangci-lint >/dev/null 2>&1
 CHECK_IMPORTS = command -v goimports >/dev/null 2>&1
@@ -23,6 +24,7 @@ imports-tools:
 build:
 	@echo "-- building $(NAME)"
 	@go build -o $(BINARY) ./...
+	#$(BINARY)
 
 test:
 	@echo "-- testing $(NAME)"
