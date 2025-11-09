@@ -3,14 +3,15 @@ package config_test
 import (
 	"os"
 	"testing"
+	"reflect"
 
 	"github.com/akyaiy/GSfass/core/config"
 )
 
 type CfgConfig struct {
-	Field1 string `mapstructure:"field1"`
-	Field2 int    `mapstructure:"field2"`
-	Field3 int    `mapstructure:"field3"`
+	Field1 string         `mapstructure:"field1"`
+	Field2 int            `mapstructure:"field2"`
+	Field3 map[string]any `mapstructure:"field3"`
 }
 
 func Test_configReadingUsingString(t *testing.T) {
@@ -19,7 +20,7 @@ func Test_configReadingUsingString(t *testing.T) {
 		cfgStr string
 		expect CfgConfig
 		typ    string
-		defs   map[string]string
+		defs   map[string]any
 	}{
 		{
 			name: "yaml_basic",
@@ -37,18 +38,16 @@ field2: 123
 			name: "json_basic_with_defaults",
 			cfgStr: `
 {
-	"field1": "jsonValue",
-	"field2": 456
+	"field1": "jsonValue"
 }
 `,
 			expect: CfgConfig{
 				Field1: "jsonValue",
 				Field2: 456,
-				Field3: 789,
 			},
 			typ: "json",
-			defs: map[string]string{
-				"field3": "789",
+			defs: map[string]any{
+				"field2": 456,
 			},
 		},
 	}
@@ -64,20 +63,19 @@ field2: 123
 			if err != nil {
 				t.Fatalf("Failed to read config from string: %v", err)
 			}
-			if *cfg != tt.expect {
+			if !reflect.DeepEqual(*cfg, tt.expect) {
 				t.Errorf("Expected %+v, got %+v", tt.expect, *cfg)
 			}
 		})
 	}
 }
 
-
 func Test_configReadingUsingFilepath(t *testing.T) {
 	tests := []struct {
 		name     string
 		filePath string
 		expect   CfgConfig
-		defs     map[string]string
+		defs     map[string]any
 	}{
 		{
 			name:     "yaml_file_basic",
@@ -85,6 +83,20 @@ func Test_configReadingUsingFilepath(t *testing.T) {
 			expect: CfgConfig{
 				Field1: "testValue",
 				Field2: 123,
+			},
+		},
+		{
+			name:     "yaml_file_with_nested_defaults",
+			filePath: "testdata/config.yaml",
+			expect: CfgConfig{
+				Field1: "testValue",
+				Field2: 123,
+				Field3: map[string]any{
+					"subfield1": true,
+				},
+			},
+			defs: map[string]any{
+				"field3.subfield1": true,
 			},
 		},
 	}
@@ -100,7 +112,7 @@ func Test_configReadingUsingFilepath(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to read config from file path: %v", err)
 			}
-			if *cfg != tt.expect {
+			if !reflect.DeepEqual(*cfg, tt.expect) {
 				t.Errorf("Expected %+v, got %+v", tt.expect, *cfg)
 			}
 		})
@@ -113,7 +125,7 @@ func Test_configReadingUsingFile(t *testing.T) {
 		filePath string
 		expect   CfgConfig
 		typ      string
-		defs     map[string]string
+		defs     map[string]any
 	}{
 		{
 			name:     "yaml_reader_basic",
@@ -144,7 +156,7 @@ func Test_configReadingUsingFile(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to read config from file: %v", err)
 			}
-			if *cfg != tt.expect {
+			if !reflect.DeepEqual(*cfg, tt.expect) {
 				t.Errorf("Expected %+v, got %+v", tt.expect, *cfg)
 			}
 		})

@@ -17,7 +17,7 @@ const (
 
 type ConfigReader struct {
 	by       any
-	defs     map[string]string
+	defs     map[string]any
 	typ      string
 	using    int8
 	file     os.File
@@ -57,7 +57,7 @@ func (cr ConfigReader) String(str string) ConfigReader {
 	return cr
 }
 
-func (cr ConfigReader) SetDefaults(defs map[string]string) ConfigReader {
+func (cr ConfigReader) SetDefaults(defs map[string]any) ConfigReader {
 	cr.defs = defs
 	return cr
 }

@@ -14,11 +14,11 @@ type EnvConfig struct {
 
 func Test_envReading(t *testing.T) {
 	tests := []struct {
-		name    string
-		env     map[string]string
-		defs    map[string]string
-		prefix  string
-		expect  EnvConfig
+		name   string
+		env    map[string]string
+		defs   map[string]string
+		prefix string
+		expect EnvConfig
 	}{
 		{
 			name: "basic environment reading with defaults",

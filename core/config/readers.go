@@ -31,7 +31,7 @@ type CfgReaderContract interface {
 	FilePath(path string) CfgReaderContract
 	String(str string) CfgReaderContract
 	SetBy(sct any) CfgReaderContract
-	SetDefaults(defs map[string]string) CfgReaderContract
+	SetDefaults(defs map[string]any) CfgReaderContract
 	End() error
 }
 
