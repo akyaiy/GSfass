@@ -15,7 +15,7 @@ func Read() Readers {
 type ReaderContract interface {
 	Environment() EnvReaderContract
 	Config() CfgReaderContract
-	CmdLine() CmdLineReaderContract
+//	CmdLine() CmdLineReaderContract
 }
 
 type EnvReaderContract interface {
@@ -35,8 +35,9 @@ type CfgReaderContract interface {
 	End() error
 }
 
-type CmdLineReaderContract interface {
-	SetBy(sct any) CmdLineReaderContract
-	SetQuery(query []string) CmdLineReaderContract
-	End() error
-}
+// type CmdLineReaderContract interface {
+// 	SetBy(sct any) CmdLineReaderContract
+// 	SetQuery(query []string) CmdLineReaderContract
+// 	SetOpts(opts CmdLineReaderOptions) CmdLineReader
+// 	End() error
+// }
