@@ -14,15 +14,15 @@ type EnvConfig struct {
 
 func Test_envReading(t *testing.T) {
 	tests := []struct {
-		obj    any
-		eviron map[string]string
-		defs   map[string]string
-		prefix string
-		expect EnvConfig
+		name    string
+		env     map[string]string
+		defs    map[string]string
+		prefix  string
+		expect  EnvConfig
 	}{
 		{
-			obj: &EnvConfig{},
-			eviron: map[string]string{
+			name: "basic environment reading with defaults",
+			env: map[string]string{
 				"VAR1": "value1",
 				"VAR2": "value2",
 			},
@@ -39,23 +39,26 @@ func Test_envReading(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		for k, v := range tt.eviron {
-			t.Setenv(k, v)
-		}
+		t.Run(tt.name, func(t *testing.T) {
+			for k, v := range tt.env {
+				t.Setenv(k, v)
+			}
 
-		cfg := &EnvConfig{}
+			cfg := &EnvConfig{}
 
-		err := config.Read().Environment().SetBy(cfg).
-			SetDefaults(tt.defs).
-			SetEnvPrefix(tt.prefix).
-			End()
+			if err := config.Read().
+				Environment().
+				SetBy(cfg).
+				SetDefaults(tt.defs).
+				SetEnvPrefix(tt.prefix).
+				End(); err != nil {
+				t.Fatalf("failed to read environment variables: %v", err)
+			}
 
-		if err != nil {
-			t.Fatalf("Failed to read environment variables: %v", err)
-		}
-
-		if *cfg != tt.expect {
-			t.Errorf("Expected %+v, got %+v", tt.expect, *cfg)
-		}
+			// Проверяем результат
+			if *cfg != tt.expect {
+				t.Errorf("expected %+v, got %+v", tt.expect, *cfg)
+			}
+		})
 	}
 }
