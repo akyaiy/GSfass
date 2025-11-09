@@ -132,7 +132,6 @@ package config
 // // 	}
 // // }
 
-
 // // type CmdConfig struct {
 // // 	ActiveCmd  string `cmdpath:true`
 // //   Real string `realstring:true`
