@@ -15,7 +15,7 @@ func Read() Readers {
 type ReaderContract interface {
 	Environment() EnvReaderContract
 	Config() CfgReaderContract
-//	CmdLine() CmdLineReaderContract
+	// CmdLine() CmdLineReaderContract
 }
 
 type EnvReaderContract interface {
@@ -27,11 +27,11 @@ type EnvReaderContract interface {
 
 type CfgReaderContract interface {
 	SetType(typ string) CfgReaderContract
-	SetFile(file os.File) CfgReaderContract
-	SetFilePath(path string) CfgReaderContract
-	SetString(str string) CfgReaderContract
+	File(file os.File) CfgReaderContract
+	FilePath(path string) CfgReaderContract
+	String(str string) CfgReaderContract
 	SetBy(sct any) CfgReaderContract
-	SetDefaults(defs map[string]any) CfgReaderContract
+	SetDefaults(defs map[string]string) CfgReaderContract
 	End() error
 }
 
