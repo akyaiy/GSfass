@@ -3,6 +3,7 @@
 NAME = gsfcmpl
 ENTRY = ./cmd/$(NAME)/main.go
 BINARY = ../${BIN_DIR}/$(NAME)
+PATH := $(PATH):$(HOME)/go/bin
 
 .PHONY: build test lint fmt imports
 

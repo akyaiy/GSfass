@@ -2,6 +2,7 @@
 
 NAME = core
 ENTRY = ./cmd/$(NAME)/main.go
+PATH := $(PATH):$(HOME)/go/bin
 
 .PHONY: build test lint fmt imports
 
