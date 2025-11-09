@@ -21,7 +21,8 @@ imports-tools:
 .PHONY: build test lint fmt imports
 
 build:
-	@echo "-- ignoring $(NAME)"
+	@echo "-- building $(NAME)"
+	@go build -o $(BINARY) ./...
 
 test:
 	@echo "-- testing $(NAME)"
