@@ -24,7 +24,6 @@ imports-tools:
 build:
 	@echo "-- building $(NAME)"
 	@go build -o $(BINARY) ./...
-	#$(BINARY)
 
 test:
 	@echo "-- testing $(NAME)"
