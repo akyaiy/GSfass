@@ -3,7 +3,7 @@
 NAME = demo1
 ENTRY = ./cmd/$(NAME)/main.go
 BIN_DIR = bin
-BINARY = ../${BIN_DIR}/$(NAME)
+BINARY = ../../${BIN_DIR}/$(NAME)
 CHECK_LINTER = command -v golangci-lint >/dev/null 2>&1
 CHECK_IMPORTS = command -v goimports >/dev/null 2>&1
 PATH := $(PATH):$(HOME)/go/bin
@@ -19,7 +19,11 @@ imports-tools:
 		go install golang.org/x/tools/cmd/goimports@latest; \
 	fi
 
-.PHONY: build test lint fmt imports
+.PHONY: build run test lint fmt imports
+
+run: build
+	@echo "-- running $(NAME)"
+	@$(BINARY)
 
 build:
 	@echo "-- building $(NAME)"

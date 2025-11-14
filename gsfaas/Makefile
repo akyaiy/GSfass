@@ -19,7 +19,11 @@ imports-tools:
 		go install golang.org/x/tools/cmd/goimports@latest; \
 	fi
 
-.PHONY: build test lint fmt imports
+.PHONY: build run test lint fmt imports
+
+run: build
+	@echo "-- running $(NAME)"
+	@$(BINARY)
 
 build:
 	@echo "-- building $(NAME)"
