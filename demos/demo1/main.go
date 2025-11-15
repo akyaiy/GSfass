@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"sync/atomic"
+	"time"
 
 	"github.com/akyaiy/GSfass/core/config"
 )
@@ -12,11 +14,7 @@ type AppConfig struct {
 		Host string `mapstructure:"host"`
 		Port int    `mapstructure:"port"`
 	} `mapstructure:"func_gateway"`
-	Dashboard struct {
-		Enabled bool   `mapstructure:"enabled"`
-		Host    string `mapstructure:"host"`
-		Port    int    `mapstructure:"port"`
-	} `mapstructure:"dashboard"`
+	Body string `mapstructure:"body"`
 }
 
 type App struct {
@@ -37,6 +35,13 @@ func (a *App) LoadConfig(path string) error {
 	return nil
 }
 
+func readConfig(conf *AppConfig) {
+	for true {
+		fmt.Printf("\n\nCurrent config: %+v\n\n", conf)
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
 func main() {
 	app := NewApp()
 	err := app.LoadConfig("config/cfg.yaml")
@@ -44,4 +49,25 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Loaded config: %+v\n", app.Config.Load())
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			conf := app.Config.Load().(*AppConfig)
+			fmt.Fprintf(w, "%s" ,conf.Body)
+		},
+	)
+	go http.ListenAndServe(fmt.Sprintf("%s:%d",
+		app.Config.Load().(*AppConfig).FuncGateway.Host,
+		app.Config.Load().(*AppConfig).FuncGateway.Port,
+	), nil)
+
+	go readConfig(app.Config.Load().(*AppConfig))
+	for true {
+		fmt.Scanln()
+		err := app.LoadConfig("config/cfg.yaml")
+		if err != nil {
+			fmt.Printf("### Error reloading config: %v\n", err)
+		} else {
+			fmt.Println("### Config reloaded successfully.")
+		}
+	}
 }
